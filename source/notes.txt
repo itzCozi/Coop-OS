@@ -4,3 +4,4 @@ Notes:
 * The kernel.c file was adapted to use C++ instead of C
 * IDK how to run this thing after i compile it maybe Replit
 but it might not run the same on my Windows PC at home...
+* We are using grub to run it actually
