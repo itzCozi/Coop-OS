@@ -17,7 +17,8 @@
 #endif
 
 /* Hardware text mode color constants. */
-enum vga_color {
+enum vga_color
+{
   VGA_COLOR_BLACK = 0,
   VGA_COLOR_BLUE = 1,
   VGA_COLOR_GREEN = 2,
@@ -36,17 +37,17 @@ enum vga_color {
   VGA_COLOR_WHITE = 15,
 };
 
-static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) 
+static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg)
 {
   return fg | bg << 4;
 }
 
-static inline uint16_t vga_entry(unsigned char uc, uint8_t color) 
+static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
 {
-  return (uint16_t) uc | (uint16_t) color << 8;
+  return (uint16_t)uc | (uint16_t)color << 8;
 }
 
-size_t strlen(const char* str) 
+size_t strlen(const char *str)
 {
   size_t len = 0;
   while (str[len])
@@ -55,69 +56,77 @@ size_t strlen(const char* str)
 }
 
 // Have to rename these variables to something i know
-// i have no clue what these mean rn 
+// i have no clue what these mean rn
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
-uint16_t* terminal_buffer;
+uint16_t *terminal_buffer;
 
-void terminal_initialize(void) 
+void terminal_initialize(void)
 {
   terminal_row = 0;
   terminal_column = 0;
   terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-  terminal_buffer = (uint16_t*) 0xB8000;
-  for (size_t y = 0; y < VGA_HEIGHT; y++) {
-    for (size_t x = 0; x < VGA_WIDTH; x++) {
+  terminal_buffer = (uint16_t *)0xB8000;
+  for (size_t y = 0; y < VGA_HEIGHT; y++)
+  {
+    for (size_t x = 0; x < VGA_WIDTH; x++)
+    {
       const size_t index = y * VGA_WIDTH + x;
       terminal_buffer[index] = vga_entry(' ', terminal_color);
     }
   }
 }
 
-void terminal_set_color(uint8_t color) 
+void terminal_set_color(uint8_t color)
 {
   terminal_color = color;
 }
 
-void terminal_put_entry_at(char c, uint8_t color, size_t x, size_t y) 
+void terminal_put_entry_at(char c, uint8_t color, size_t x, size_t y)
 {
   const size_t index = y * VGA_WIDTH + x;
   terminal_buffer[index] = vga_entry(c, color);
 }
 
-void terminal_put_char(char c) 
+void terminal_put_char(char c)
 {
-  // TODO: Here we can tick up the terminal column depending if the "\n"
+  // TODO (DONE): Here we can tick up the terminal column depending if the "\n"
   // char is in the string if so we go to the next "line" or column
   // HELP: (https://www.digitalocean.com/community/tutorials/string-find-c-plus-plus)
   terminal_put_entry_at(c, terminal_color, terminal_column, terminal_row);
-  if (++terminal_column == VGA_WIDTH) {
+  if (++terminal_column == VGA_WIDTH)
+  {
     terminal_column = 0;
     if (++terminal_row == VGA_HEIGHT)
       terminal_row = 0;
   }
+  if (c == '\n')
+  {
+    terminal_row++;
+    terminal_column = 0;
+  }
 }
 
-void terminal_write(const char* data, size_t size) 
+void terminal_write(const char *data, size_t size)
 {
   for (size_t i = 0; i < size; i++)
     terminal_put_char(data[i]);
 }
 
-void terminal_write_string(const char* data) 
+void terminal_write_string(const char *data)
 {
   terminal_write(data, strlen(data));
 }
 
-extern "C" void kernel_main(void) // Added extern for C++ version
+void kernel_main(void) // Added extern for C++ version (extern "C")
 {
-  /* Initialize terminal interface */
+  // Initialize terminal interface
   terminal_initialize();
 
-  /* Newline support is left as an exercise. */
-  terminal_write_string("Hello, kernel World!\n");
+  // Newline support is left as an exercise.
+  terminal_write_string("Hello, kernel World!\nNew line added");
 }
