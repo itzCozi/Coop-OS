@@ -1,5 +1,8 @@
 Reference: https://wiki.osdev.org/Bare_Bones
 
+Articles:
+* If in string (https://www.digitalocean.com/community/tutorials/string-find-c-plus-plus)
+
 Notes:
 * The kernel.c file was adapted to use C++ instead of C
 * IDK how to run this thing after i compile it maybe Replit
@@ -7,4 +10,6 @@ but it might not run the same on my Windows PC at home...
 * We are using grub to run it actually
 
 Todo:
-* Next try and add new line support
+* Next try and add new line support [DONE]
+* Add terminal scrolling
+* Do next tutorial

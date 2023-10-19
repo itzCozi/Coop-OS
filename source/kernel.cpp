@@ -6,17 +6,17 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/* Check if the compiler thinks you are targeting the wrong operating system. */
+// Check if the compiler thinks you are targeting the wrong operating system.
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
 #endif
 
-/* This will only work for the 32-bit ix86 targets. */
+// This will only work for the 32-bit ix86 targets.
 #if !defined(__i386__)
 #error "Please compile with a ix86-elf compiler"
 #endif
 
-/* Hardware text mode color constants. */
+// Hardware text mode color constants.
 enum vga_color
 {
   VGA_COLOR_BLACK = 0,
@@ -96,12 +96,12 @@ void terminal_put_char(char c)
 {
   // TODO (DONE): Here we can tick up the terminal column depending if the "\n"
   // char is in the string if so we go to the next "line" or column
-  // HELP: (https://www.digitalocean.com/community/tutorials/string-find-c-plus-plus)
+
   terminal_put_entry_at(c, terminal_color, terminal_column, terminal_row);
-  if (++terminal_column == VGA_WIDTH)
-  {
+  if (terminal_column++ == VGA_WIDTH)
+  {  // If at end of the line, tick up the row and reset the column
     terminal_column = 0;
-    if (++terminal_row == VGA_HEIGHT)
+    if (terminal_row++ == VGA_HEIGHT)
       terminal_row = 0;
   }
   if (c == '\n')
