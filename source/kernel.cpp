@@ -69,7 +69,7 @@ void terminal_initialize(void)
 {
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+  terminal_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
   terminal_buffer = (uint16_t *)0xB8000;
   for (size_t y = 0; y < VGA_HEIGHT; y++)
   {
@@ -96,7 +96,7 @@ void terminal_put_char(char c)
 {
   // TODO (DONE): Here we can tick up the terminal column depending if the "\n"
   // char is in the string if so we go to the next "line" or column
-
+  // HELP: (https://www.digitalocean.com/community/tutorials/string-find-c-plus-plus)
   terminal_put_entry_at(c, terminal_color, terminal_column, terminal_row);
   if (terminal_column++ == VGA_WIDTH)
   {  // If at end of the line, tick up the row and reset the column
@@ -104,6 +104,7 @@ void terminal_put_char(char c)
     if (terminal_row++ == VGA_HEIGHT)
       terminal_row = 0;
   }
+
   if (c == '\n')
   {
     terminal_row++;
@@ -128,5 +129,8 @@ void kernel_main(void) // Added extern for C++ version (extern "C")
   terminal_initialize();
 
   // Newline support is left as an exercise.
-  terminal_write_string("Hello, kernel World!\nNew line added");
+  for (int i = 0; i < 12; i++)
+  {
+    terminal_write_string("Hello World!\n");
+  }
 }
