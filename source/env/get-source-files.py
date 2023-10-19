@@ -14,6 +14,7 @@ def clone_repository() -> None:
   clone_command: str = f'git clone {repo_url}'
   os.system(f'powershell {cd_command};{clone_command}')
   os.rename(f'{out_dir}/Coop-OS', f'{out_dir}/git_clone')
+
   if not os.path.exists(f'{out_dir}/src'):
     os.mkdir(f'{out_dir}/src')
   else:

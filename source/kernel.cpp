@@ -54,6 +54,8 @@ size_t strlen(const char* str)
   return len;
 }
 
+// Have to rename these variables to something i know
+// i have no clue what these mean rn 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
@@ -89,6 +91,9 @@ void terminal_put_entry_at(char c, uint8_t color, size_t x, size_t y)
 
 void terminal_put_char(char c) 
 {
+  // TODO: Here we can tick up the terminal column depending if the "\n"
+  // char is in the string if so we go to the next "line" or column
+  // HELP: (https://www.digitalocean.com/community/tutorials/string-find-c-plus-plus)
   terminal_put_entry_at(c, terminal_color, terminal_column, terminal_row);
   if (++terminal_column == VGA_WIDTH) {
     terminal_column = 0;
@@ -100,7 +105,7 @@ void terminal_put_char(char c)
 void terminal_write(const char* data, size_t size) 
 {
   for (size_t i = 0; i < size; i++)
-    terminal_putchar(data[i]);
+    terminal_put_char(data[i]);
 }
 
 void terminal_write_string(const char* data) 
@@ -108,7 +113,7 @@ void terminal_write_string(const char* data)
   terminal_write(data, strlen(data));
 }
 
-void kernel_main(void) // Added extern for C++ version
+extern "C" void kernel_main(void) // Added extern for C++ version
 {
   /* Initialize terminal interface */
   terminal_initialize();
